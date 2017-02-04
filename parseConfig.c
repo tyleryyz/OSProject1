@@ -35,7 +35,7 @@ char **parseConfig(char* argv[])
       }
 
     // begin parsing
-    printf("HERE!!! %s\n", argv[1]);
+    
     FILE *config_file = fopen(argv[1], "r");
 
     if (config_file == NULL)
