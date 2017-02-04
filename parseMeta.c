@@ -4,36 +4,45 @@ struct Points *parseMeta(char* input_file[])
   {
     fflush(stdout);
     struct Points *meta_data;
-    //char meta_line[100];
-    //char *buffer;
     int iterator;
+    int tmp;
     int number_of_lines;
     int number_of_delims;
     char buffer[100];
     const char *line_check;
-    char *file_letter;
+    int file_letter;
     char *operator;
     char *cycle_time;
     char *sample_proc;
     int *delims_per_line;
 
+
     FILE* meta_file = fopen(input_file[1], "r");
+    if (meta_file == NULL){
+      exit(1);
+    }
+
 
     // getting number of lines in file
-    while(fgets(buffer, 100, meta_file)!=NULL)
+    while(!feof(meta_file))
       {
-        number_of_lines++;
+        tmp = fgetc(meta_file);
+        if (tmp == '\n')
+          {
+            number_of_lines+=1;
+            printf("%d\n", number_of_lines);
+          }
       }
-    printf("%d\n", number_of_lines);
-    fclose(meta_file);
-    FILE* meta_file1 = fopen(input_file[1], "r");
 
-    delims_per_line = malloc(sizeof(int)*number_of_lines-2);
+    printf("%d\n", number_of_lines);
+    rewind(meta_file);
+    printf("here!\n");
+    delims_per_line = malloc(sizeof(int)*number_of_lines-1);
 
     // Getting the number of processes per line
-    for (iterator = 1; iterator<number_of_lines -1; iterator++)
+    for (iterator = 0; iterator<number_of_lines; iterator++)
       {
-        fgets(buffer, 100, meta_file1);
+        fgets(buffer, 100, meta_file);
         line_check = buffer;
         while ((line_check = strstr(line_check, ";")))
           {
@@ -48,28 +57,18 @@ struct Points *parseMeta(char* input_file[])
           }
         number_of_delims = 0;
       }
+    printf("here!3\n");
+    rewind(meta_file);
+    for (iterator = 0; iterator < number_of_lines; iterator++){
+      printf("line: %d delims per line: %d\n", iterator, delims_per_line[iterator]);
+    }
 
-    fclose(meta_file1);
-    FILE* meta_file2 = fopen(input_file[1], "r");
-
-  //  for (iterator = 2; iterator < number_of_lines-1; iterator++){
-    //  printf("line: %d delims per line: %d\n", iterator, delims_per_line[iterator]);
-    //}
-
-
-    fgets(buffer, 100, meta_file2);
-    fgets(buffer, 100, meta_file2);
-    sample_proc = strtok(buffer, ";");
-    printf("%s\n", sample_proc);
-
-    file_letter = strtok(NULL, ";");
-    printf("%s\n", file_letter);
 
 
 
     meta_data = malloc(sizeof(struct Points) * number_of_delims+1);
 
-    fclose(meta_file2);
+    fclose(meta_file);
     return meta_data;
 
   }
