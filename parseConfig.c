@@ -35,7 +35,7 @@ char **parseConfig(char* argv[])
       }
 
     // begin parsing
-    
+
     FILE *config_file = fopen(argv[1], "r");
 
     if (config_file == NULL)

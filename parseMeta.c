@@ -14,7 +14,7 @@ struct Points *parseMeta(char* input_file[])
     char *operator;
     char *cycle_time;
     char *sample_proc;
-    char *throwaway;
+    char *throwaway
     int *delims_per_line;
     FILE *meta_file;
 
@@ -69,17 +69,7 @@ struct Points *parseMeta(char* input_file[])
       {
         fgets(buffer, 350, meta_file);
         sample_proc = strtok(buffer, ";");
-        //printf("%s\n", sample_proc);
-        throwaway = malloc(strlen(sample_proc)+1);
-        strcpy(throwaway, sample_proc);
-        file_letter = strtok(throwaway, "(");
-        //printf("%s\n", file_letter);
-        operator = strtok(NULL, ")");
-        //printf("%s\n", operator);
-        cycle_time = strtok(NULL, ".");
-        //printf("%s\n", cycle_time);
-        //printf("sample_proc: %s\n", sample_proc);
-        //printf("throwaway: %s\n", throwaway);
+        printf("%s\n", sample_proc);
 
         for (tmp = 0; tmp < delims_per_line[iterator]-1; tmp++)
           {
@@ -87,25 +77,8 @@ struct Points *parseMeta(char* input_file[])
             if (tmp == delims_per_line[iterator]-2)
               {
                 sample_proc = strtok(sample_proc, "\n");
-                const char* removed_space = sample_proc;
 
-                while(*removed_space != '\0' && isspace(*removed_space))
-                {
-                  ++removed_space;
-                }
-                size_t len = strlen(removed_space)+1;
-                memmove(sample_proc, removed_space, len);
-                //printf("%s\n", sample_proc);
               }
-            const char* removed_space = sample_proc;
-
-            while(*removed_space != '\0' && isspace(*removed_space))
-            {
-              ++removed_space;
-            }
-            size_t len = strlen(removed_space)+1;
-            memmove(sample_proc, removed_space, len);
-            //printf("%s\n", sample_proc);
             printf("%s\n", sample_proc);
           }
       }
@@ -130,6 +103,9 @@ struct Points *parseMeta(char* input_file[])
     memmove(sample_proc, removed_space, len);
     printf("%s\n", sample_proc);
 
+
+    throwaway = malloc(strlen(sample_proc)+1);
+    strcpy(throwaway, sample_proc);
     file_letter = strtok(sample_proc, "(");
     printf("%s\n", file_letter);
     operator = strtok(NULL, ")");
