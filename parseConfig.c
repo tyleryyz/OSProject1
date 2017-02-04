@@ -35,14 +35,13 @@ char **parseConfig(char* argv[])
       }
 
     // begin parsing
-
-    FILE* config_file = fopen(argv[1], "r");
+    printf("HERE!!! %s\n", argv[1]);
+    FILE *config_file = fopen(argv[1], "r");
 
     if (config_file == NULL)
       {
         config_data[0] = malloc(strlen("ERROR[1]")+1);
         strcpy(config_data[0], "ERROR[1]");
-        fclose(config_file);
         return config_data;
       }
 
