@@ -5,5 +5,5 @@
 #include <stdio.h>
 #include <math.h>
 
-char **parseConfig(char *argv[]);
+char **parseConfig(char *file_input[]);
 #endif

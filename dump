@@ -1,0 +1,15 @@
+throwaway = malloc(1+strlen(sample_proc));
+strcpy(throwaway, sample_proc);
+printf("throwaway: %s\n", throwaway);
+printf("sample_proc: %s\n", sample_proc);
+file_letter = strtok(throwaway, "(");
+printf("file_letter: %s\n", file_letter);
+printf("throwaway: %s\n", throwaway);
+printf("sample_proc: %s\n", sample_proc);
+
+operator = strtok(NULL, ")");
+printf("operator: %s\n", operator);
+cycle_time = strtok(NULL, ".");
+printf("cycle_time: %s\n", cycle_time);
+printf("throwaway: %s\n", throwaway);
+printf("sample_proc: %s\n", sample_proc);

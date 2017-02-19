@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
   {
     char** parsed_config_data;
-    struct Points* parsed_meta_data_points;
+    char** parsed_meta_data_points;
 
 
     // command line argument checking
@@ -88,8 +88,10 @@ int main(int argc, char *argv[])
         return(1);
       }
 
+    //parsing meta data
     parsed_meta_data_points = parseMeta(parsed_config_data);
-    /*
+
+    //outputting parsed config data
     printf("\nConfiguration File Data\n");
     printf("Version/Phase: %s\n", parsed_config_data[0]);
     printf("File Path: %s\n", parsed_config_data[1]);
@@ -100,7 +102,9 @@ int main(int argc, char *argv[])
     printf("I/O Cycle Time (msec): %s\n", parsed_config_data[6]);
     printf("Log To: %s\n", parsed_config_data[7]);
     printf("Log File Path: %s\n", parsed_config_data[8]);
-    */
+
+
+    free(parsed_meta_data_points);
     free(parsed_config_data);
     return(0);
   }
