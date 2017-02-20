@@ -17,6 +17,7 @@ struct Points *parseMeta(char* input_file[], int* count)
     char *operator;
     char *cycle_time;
     char *sample_proc;
+    int new_num;
 
     int cycle_time_int;
     int *delims_per_line;
@@ -51,22 +52,27 @@ struct Points *parseMeta(char* input_file[], int* count)
         line_check = buffer;
         while ((line_check = strstr(line_check, ";")))
           {
+            new_num++;
             number_of_delims++;
             line_check++;
           }
         delims_per_line[iterator] = number_of_delims;
         if(iterator == number_of_lines -2)
           {
+            new_num++;
             number_of_delims++;
             delims_per_line[iterator] = number_of_delims;
           }
-        number_of_delims = 0;
+          number_of_delims = 0;
       }
 
 
     rewind(meta_file);
+    printf("new_num: %d\n", new_num);
+    printf("number_of_delims: %d\n", number_of_delims);
+    meta_data = malloc(new_num * sizeof(struct Points));
 
-    meta_data = malloc(sizeof(struct Points) * number_of_delims+1);
+
 
     operator = malloc(25*sizeof(char)+1);
     cycle_time = malloc(25*sizeof(char)+1);
@@ -102,7 +108,6 @@ struct Points *parseMeta(char* input_file[], int* count)
               }
               operator[operator_iterator++] = sample_proc[tempiterator];
             }
-            operator[operator_iterator++] = '\0';
             tempiterator++;
             while (sample_proc[tempiterator] != '\0' && sample_proc[tempiterator] != '.'){
 
@@ -116,10 +121,21 @@ struct Points *parseMeta(char* input_file[], int* count)
           }
 
         cycle_time_int = atoi(cycle_time);
+        printf("Operation #%d\n", (*count));
+        printf("%c\n", file_letter);
+        printf("%s\n", operator);
+        printf("%d\n", cycle_time_int);
         meta_data[(*count)].file_letter = file_letter;
-        meta_data[(*count)].operation = (char*)malloc(strlen(operator)*sizeof(char));
+        printf("file_letter inside struct: %c\n", meta_data[(*count)].file_letter);
+        meta_data[(*count)].operation = malloc(strlen(operator)*sizeof(char));
         meta_data[(*count)].operation = operator;
+        printf("operation inside struct: %s\n", meta_data[(*count)].operation);
         meta_data[(*count)].cycle_time = cycle_time_int;
+        printf("cycle_time inside struct: %d\n", meta_data[(*count)].cycle_time);
+        printf("0th op file letter: %c\n", meta_data[0].file_letter);
+        printf("Count: %d\n", (*count));
+        printf("0th op operation: %s\n", meta_data[0].operation);
+        printf("0th op cycle time: %d\n", meta_data[0].cycle_time);
         (*count)++;
         //--------------------------------------------------------------------
         //-------------------------END PARSE--------------------------------
@@ -162,7 +178,6 @@ struct Points *parseMeta(char* input_file[], int* count)
                   }
                   operator[operator_iterator++] = sample_proc[tempiterator];
                 }
-                operator[operator_iterator++] = '\0';
                 tempiterator++;
                 while (sample_proc[tempiterator] != '\0' && sample_proc[tempiterator] != '.'){
 
@@ -176,37 +191,32 @@ struct Points *parseMeta(char* input_file[], int* count)
               }
 
             cycle_time_int = atoi(cycle_time);
-            printf("file_letter: %c\n", file_letter);
-            printf("operator: %s\n", operator);
-            printf("cycle_time: %d\n", cycle_time_int);
-            printf("count: %d\n", (*count));
+            printf("Operation #%d\n", (*count));
+            printf("%c\n", file_letter);
+            printf("%s\n", operator);
+            printf("%d\n", cycle_time_int);
             meta_data[(*count)].file_letter = file_letter;
-            printf("file letter being stored: %c\n", meta_data[(*count)].file_letter);
-            strcat(operator, "\0");
-            iterator = 0;
-            for (iterator = 0; iterator < strlen(operator); iterator++){
-              printf("%c\n", operator[iterator]);
-            }
-
-            meta_data[(*count)].operation = (char*)malloc(strlen(operator)*sizeof(char));
+            printf("file_letter inside struct: %c\n", meta_data[(*count)].file_letter = file_letter);
+            meta_data[(*count)].operation = malloc(strlen(operator)*sizeof(char)+1);
             meta_data[(*count)].operation = operator;
-            printf("operation being stored: %s\n", meta_data[(*count)].operation);
+            printf("operation inside struct: %s\n", meta_data[(*count)].operation);
             meta_data[(*count)].cycle_time = cycle_time_int;
-            printf("cycle time being stored: %d\n", meta_data[(*count)].cycle_time);
+            printf("cycle_time inside struct: %d\n", meta_data[(*count)].cycle_time);
+            printf("0th op file letter: %c\n", meta_data[0].file_letter);
+            printf("0th op operation: %s\n", meta_data[0].operation);
+            printf("0th op cycle time: %d\n", meta_data[0].cycle_time);
             (*count)++;
             //--------------------------------------------------------------------
             //-------------------------END PARSE--------------------------------
             //--------------------------------------------------------------------
             }
         }
-        iterator = 0;
-        for (iterator = 0; iterator < (*count); iterator++)
-          {
-            printf("count: %d\n", iterator);
-            printf("file letter start: %c\n", meta_data[iterator].file_letter);
-            printf("operation: %s\n", meta_data[iterator].operation);
-            printf("cycle time: %d\n", meta_data[iterator].cycle_time);
-          }
+
+    printf("HERE!\n");
+    printf("file letter: %c\n", meta_data[0].file_letter);
+    printf("operation: %s\n", meta_data[0].operation);
+    printf("cycle time: %d\n", meta_data[0].cycle_time);
+
     fclose(meta_file);
     return meta_data;
 }
