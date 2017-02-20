@@ -117,7 +117,7 @@ struct Points *parseMeta(char* input_file[], int* count)
 
         cycle_time_int = atoi(cycle_time);
         meta_data[(*count)].file_letter = file_letter;
-        meta_data[(*count)].operation = malloc(strlen(operator)*sizeof(char)+1);
+        meta_data[(*count)].operation = (char*)malloc(strlen(operator)*sizeof(char));
         meta_data[(*count)].operation = operator;
         meta_data[(*count)].cycle_time = cycle_time_int;
         (*count)++;
@@ -188,7 +188,7 @@ struct Points *parseMeta(char* input_file[], int* count)
               printf("%c\n", operator[iterator]);
             }
 
-            meta_data[(*count)].operation = malloc(strlen(operator)*sizeof(char)+1);
+            meta_data[(*count)].operation = (char*)malloc(strlen(operator)*sizeof(char));
             meta_data[(*count)].operation = operator;
             printf("operation being stored: %s\n", meta_data[(*count)].operation);
             meta_data[(*count)].cycle_time = cycle_time_int;
