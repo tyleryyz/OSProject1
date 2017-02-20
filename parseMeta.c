@@ -1,6 +1,6 @@
 #include "parseMeta.h"
 
-struct Points *parseMeta(char* input_file[])
+struct Points *parseMeta(char* input_file[], int* count)
   {
     fflush(stdout);
     struct Points *meta_data;
@@ -10,13 +10,15 @@ struct Points *parseMeta(char* input_file[])
     int number_of_delims=0;
     int tempiterator=0;
     int operator_iterator=0;
+    int cycle_time_iterator=0;
     char buffer[350];
     const char *line_check;
     char file_letter;
     char *operator;
     char *cycle_time;
     char *sample_proc;
-    char *throwaway;
+
+    int cycle_time_int;
     int *delims_per_line;
     FILE *meta_file;
 
@@ -64,46 +66,138 @@ struct Points *parseMeta(char* input_file[])
 
     rewind(meta_file);
 
-
-
-    fgets(buffer, 350, meta_file);
-  for (iterator = 1; iterator < number_of_lines-1; iterator++)
-      {
-        fgets(buffer, 350, meta_file);
-        sample_proc = strtok(buffer, ";");
-        printf("%s\n", sample_proc);
-
-        for (tmp = 0; tmp < delims_per_line[iterator]-1; tmp++)
-          {
-            sample_proc = strtok(NULL, ";");
-            if (tmp == delims_per_line[iterator]-2)
-              {
-                sample_proc = strtok(sample_proc, "\n");
-              }
-            RemoveSpaces(sample_proc);
-            printf("%s\n", sample_proc);
-
-          }
-      }
-      operator = malloc(25*sizeof(char)+1);
-      for (tempiterator = 0; tempiterator<strlen(sample_proc); tempiterator++){
-        if (sample_proc[tempiterator] == '('){
-          file_letter = sample_proc[tempiterator-1];
-        }
-        while (sample_proc[tempiterator] != ')'){
-          printf("here");
-          operator[operator_iterator] = sample_proc[tempiterator];
-
-        }
-      }
-
-    printf("file_letter: %c", file_letter);
-    printf("operator: %s", operator);
     meta_data = malloc(sizeof(struct Points) * number_of_delims+1);
 
+    operator = malloc(25*sizeof(char)+1);
+    cycle_time = malloc(25*sizeof(char)+1);
+    fgets(buffer, 350, meta_file);
+    for (iterator = 1; iterator < number_of_lines-1; iterator++)
+        {
+          fgets(buffer, 350, meta_file);
+          sample_proc = strtok(buffer, ";");
+          RemoveSpaces(sample_proc);
+          (*count)++;
+
+          //--------------------------------------------------------------------
+          //-------------------------FIRST PARSE--------------------------------
+          //--------------------------------------------------------------------
+          memset(operator, 0, strlen(operator));
+          memset(cycle_time, 0, strlen(cycle_time));
+
+          tempiterator = 0;
+          operator_iterator = 0;
+          cycle_time_iterator = 0;
+          for (tempiterator = 0; tempiterator<strlen(sample_proc); tempiterator++){
+            while (sample_proc[tempiterator] != '('){
+              if (sample_proc[tempiterator] == '('){
+                break;
+              }
+              file_letter = sample_proc[tempiterator];
+              tempiterator++;
+            }
+            while (sample_proc[tempiterator++] != ')'){
+
+              if (sample_proc[tempiterator] == ')'){
+                break;
+              }
+              operator[operator_iterator++] = sample_proc[tempiterator];
+            }
+            tempiterator++;
+            while (sample_proc[tempiterator] != '\0' && sample_proc[tempiterator] != '.'){
+
+              if (sample_proc[tempiterator] == '.' || sample_proc[tempiterator] == '\0'){
+
+                break;
+              }
+              cycle_time[cycle_time_iterator++] = sample_proc[tempiterator];
+              tempiterator++;
+            }
+          }
+
+        cycle_time_int = atoi(cycle_time);
+        meta_data[(*count)].file_letter = file_letter;
+        meta_data[(*count)].operation = operator;
+        meta_data[(*count)].cycle_time = cycle_time_int;
+        //--------------------------------------------------------------------
+        //-------------------------END PARSE--------------------------------
+        //--------------------------------------------------------------------
+
+          for (tmp = 0; tmp < delims_per_line[iterator]-1; tmp++)
+            {
+              sample_proc = strtok(NULL, ";");
+              RemoveSpaces(sample_proc);
+
+              if (tmp == delims_per_line[iterator]-2)
+                {
+                  sample_proc = strtok(sample_proc, "\n");
+                  RemoveSpaces(sample_proc);
+                }
+              RemoveSpaces(sample_proc);
+              (*count)++;
+
+              //--------------------------------------------------------------------
+              //-------------------------SECOND PARSE--------------------------------
+              //--------------------------------------------------------------------
+              memset(operator, 0, strlen(operator));
+              memset(cycle_time, 0, strlen(cycle_time));
+
+              tempiterator = 0;
+              operator_iterator = 0;
+              cycle_time_iterator = 0;
+              for (tempiterator = 0; tempiterator<strlen(sample_proc); tempiterator++){
+                while (sample_proc[tempiterator] != '('){
+                  if (sample_proc[tempiterator] == '('){
+                    break;
+                  }
+                  file_letter = sample_proc[tempiterator];
+                  tempiterator++;
+                }
+                while (sample_proc[tempiterator++] != ')'){
+
+                  if (sample_proc[tempiterator] == ')'){
+                    break;
+                  }
+                  operator[operator_iterator++] = sample_proc[tempiterator];
+                }
+                tempiterator++;
+                while (sample_proc[tempiterator] != '\0' && sample_proc[tempiterator] != '.'){
+
+                  if (sample_proc[tempiterator] == '.' || sample_proc[tempiterator] == '\0'){
+
+                    break;
+                  }
+                  cycle_time[cycle_time_iterator++] = sample_proc[tempiterator];
+                  tempiterator++;
+                }
+              }
+
+            cycle_time_int = atoi(cycle_time);
+            printf("file_letter: %c\n", file_letter);
+            printf("operator: %s\n", operator);
+            printf("cycle_time: %d\n", cycle_time_int);
+            printf("count: %d\n", (*count));
+            meta_data[(*count)].file_letter = file_letter;
+            printf("file letter being stored: %c\n", meta_data[(*count)].file_letter);
+
+            meta_data[(*count)].operation = malloc(strlen(operator)*sizeof(char)+1);
+            meta_data[(*count)].operation = operator;
+            printf("operation being stored: %s\n", meta_data[iterator].operation);
+            meta_data[(*count)].cycle_time = cycle_time_int;
+            printf("cycle time being stored: %d\n", meta_data[iterator].cycle_time);
+            //--------------------------------------------------------------------
+            //-------------------------END PARSE--------------------------------
+            //--------------------------------------------------------------------
+            }
+        }
+        iterator = 0;
+        for (iterator = 0; iterator < (*count); iterator++)
+          {
+            printf("file letter: %c\n", meta_data[iterator].file_letter);
+            printf("operation: %s\n", meta_data[iterator].operation);
+            printf("cycle time: %d\n", meta_data[iterator].cycle_time);
+          }
     fclose(meta_file);
     return meta_data;
-
 }
 
 void RemoveSpaces(char* string)

@@ -6,14 +6,14 @@
 #include <math.h>
 #include <ctype.h>
 
-struct Points *parseMeta(char *file_input[]);
+struct Points *parseMeta(char *file_input[], int* count);
 void RemoveSpaces(char* string);
 
 
 struct Points
   {
-    char comp_letter[2];
-    char operation[16];
+    char file_letter;
+    char *operation;
     int cycle_time;
   };
 

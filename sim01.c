@@ -6,7 +6,9 @@
 int main(int argc, char *argv[])
   {
     char** parsed_config_data;
-    char** parsed_meta_data_points;
+    struct Points *parsed_meta_data_points;
+    int count=0;
+    int iterator = 0;
 
 
     // command line argument checking
@@ -89,7 +91,7 @@ int main(int argc, char *argv[])
       }
 
     //parsing meta data
-    parsed_meta_data_points = parseMeta(parsed_config_data);
+    parsed_meta_data_points = parseMeta(parsed_config_data, &count);
 
     //outputting parsed config data
     printf("\nConfiguration File Data\n");
@@ -102,7 +104,14 @@ int main(int argc, char *argv[])
     printf("I/O Cycle Time (msec): %s\n", parsed_config_data[6]);
     printf("Log To: %s\n", parsed_config_data[7]);
     printf("Log File Path: %s\n", parsed_config_data[8]);
-
+    printf("\nMeta Data\n");
+  /*  for (iterator = 0; iterator < count; iterator++)
+      {
+        printf("file letter: %c\n", parsed_meta_data_points[count].file_letter);
+        printf("operation: %s\n", parsed_meta_data_points[count].operator);
+        printf("cycle time: %d\n", parsed_meta_data_points[count].cycle_time);
+      }
+*/
 
     free(parsed_meta_data_points);
     free(parsed_config_data);
