@@ -76,7 +76,7 @@ struct Points *parseMeta(char* input_file[], int* count)
           fgets(buffer, 350, meta_file);
           sample_proc = strtok(buffer, ";");
           RemoveSpaces(sample_proc);
-          (*count)++;
+
 
           //--------------------------------------------------------------------
           //-------------------------FIRST PARSE--------------------------------
@@ -102,6 +102,7 @@ struct Points *parseMeta(char* input_file[], int* count)
               }
               operator[operator_iterator++] = sample_proc[tempiterator];
             }
+            operator[operator_iterator++] = '\0';
             tempiterator++;
             while (sample_proc[tempiterator] != '\0' && sample_proc[tempiterator] != '.'){
 
@@ -116,9 +117,10 @@ struct Points *parseMeta(char* input_file[], int* count)
 
         cycle_time_int = atoi(cycle_time);
         meta_data[(*count)].file_letter = file_letter;
-        meta_data[(*count)].operation = (char*)malloc(strlen(operator)*sizeof(char)+1);
+        meta_data[(*count)].operation = malloc(strlen(operator)*sizeof(char)+1);
         meta_data[(*count)].operation = operator;
         meta_data[(*count)].cycle_time = cycle_time_int;
+        (*count)++;
         //--------------------------------------------------------------------
         //-------------------------END PARSE--------------------------------
         //--------------------------------------------------------------------
@@ -134,7 +136,7 @@ struct Points *parseMeta(char* input_file[], int* count)
                   RemoveSpaces(sample_proc);
                 }
               RemoveSpaces(sample_proc);
-              (*count)++;
+
 
               //--------------------------------------------------------------------
               //-------------------------SECOND PARSE--------------------------------
@@ -160,6 +162,7 @@ struct Points *parseMeta(char* input_file[], int* count)
                   }
                   operator[operator_iterator++] = sample_proc[tempiterator];
                 }
+                operator[operator_iterator++] = '\0';
                 tempiterator++;
                 while (sample_proc[tempiterator] != '\0' && sample_proc[tempiterator] != '.'){
 
@@ -173,15 +176,24 @@ struct Points *parseMeta(char* input_file[], int* count)
               }
 
             cycle_time_int = atoi(cycle_time);
-
+            printf("file_letter: %c\n", file_letter);
+            printf("operator: %s\n", operator);
+            printf("cycle_time: %d\n", cycle_time_int);
+            printf("count: %d\n", (*count));
             meta_data[(*count)].file_letter = file_letter;
+            printf("file letter being stored: %c\n", meta_data[(*count)].file_letter);
+            strcat(operator, "\0");
+            iterator = 0;
+            for (iterator = 0; iterator < strlen(operator); iterator++){
+              printf("%c\n", operator[iterator]);
+            }
 
-
-            meta_data[(*count)].operation = (char*)malloc(strlen(operator)*sizeof(char)+1);
+            meta_data[(*count)].operation = malloc(strlen(operator)*sizeof(char)+1);
             meta_data[(*count)].operation = operator;
-
+            printf("operation being stored: %s\n", meta_data[(*count)].operation);
             meta_data[(*count)].cycle_time = cycle_time_int;
-
+            printf("cycle time being stored: %d\n", meta_data[(*count)].cycle_time);
+            (*count)++;
             //--------------------------------------------------------------------
             //-------------------------END PARSE--------------------------------
             //--------------------------------------------------------------------
@@ -190,7 +202,8 @@ struct Points *parseMeta(char* input_file[], int* count)
         iterator = 0;
         for (iterator = 0; iterator < (*count); iterator++)
           {
-            printf("file letter: %c\n", meta_data[iterator].file_letter);
+            printf("count: %d\n", iterator);
+            printf("file letter start: %c\n", meta_data[iterator].file_letter);
             printf("operation: %s\n", meta_data[iterator].operation);
             printf("cycle time: %d\n", meta_data[iterator].cycle_time);
           }
